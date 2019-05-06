@@ -1,0 +1,1 @@
+python3 wordvector/main.py --input files/input_vector/<dataset> --output files/output_vector/<document-vector.txt> --model files/model/<googlenews300d.bin> --aggregator mean --noheader True --type google --preprocess True
