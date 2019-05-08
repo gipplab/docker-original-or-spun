@@ -32,11 +32,11 @@ class FileUtil:
     def remove_last_character(self, data):
         return data[:-1]
 
-    def get_labels(self, folders_path):
-        labels = []
-        for folder in folders_path:
-            labels.append(self.get_label(folder))
-        return labels
+    # def get_labels(self, folders_path):
+    #     labels = []
+    #     for folder in folders_path:
+    #         labels.append(self.get_label(folder))
+    #     return labels
 
     def get_label(self, folder_path):
         data = folder_path.split(os.sep)
@@ -48,6 +48,22 @@ class FileUtil:
     def get_model_name(self, model_path):
         data = model_path.split(os.sep)
         return data[len(data) - 1]
+
+    '''
+    Functions used for get features and labels on the Web App
+    '''
+    def get_labels(self, dataset):
+        number_features = self.get_number_features(dataset)
+        print('label: ', dataset[number_features])
+        return dataset[number_features]
+
+    def get_features(self, dataset):
+        #print('shape: ', len(dataset))
+        number_features = self.get_number_features(dataset)
+        return dataset[: 0:number_features]
+
+    def get_number_features(self, dataset):
+        return len(dataset) - 1
 
 
 class ArffUtil:

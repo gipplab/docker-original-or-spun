@@ -1,11 +1,13 @@
 from flask import Flask, request, render_template
 from classify_text import classify_text
 from wordvector import PreprocessUtil
+from wordvector import FileOperations
 
 
 
 import gensim
 import numpy
+import pickle
 
 
 app = Flask(__name__)
@@ -17,7 +19,13 @@ def get_google_model(model_path):
     :param model_path: path to the model loaded
     :return: model object
     '''
-    return gensim.models.KeyedVectors.load_word2vec_format(model_path, binary=True)
+    try:
+        google_model = gensim.models.KeyedVectors.load_word2vec_format(model_path, binary=True)
+        print('Success: Model loaded - Size: %d dimensions' % google_model.vector_size)
+    except IOError:
+        print('Failure: Model not loaded. Check path and file')
+        exit(-1)  # exit with code -1 (error)
+    return google_model
 
 
 def get_gensim_vectors(tokens, model):
@@ -48,6 +56,14 @@ def document_avg_vector(tokens_vector_list):
     else:
         return numpy.mean(tokens_vector_list, axis=0)
 
+def get_classifier(classifier_path):
+    try:
+        ml_model= pickle.load(open(classifier_path, 'rb'))
+        print(' Machine learning classifier loaded: %s' % classifier_path)
+    except IOError:
+        print('Error: Machine learning classifier not loaded.')
+        exit(-1)  # exit with code -1 (error)
+    return ml_model
 
 @app.route('/')
 def main_page():
@@ -58,25 +74,27 @@ def classify():
     text = request.form['text']
     # Transforming document into doc_vector
     tokens = preprocess.clean(text)  # clean text - no stopwords, punctuations
-    tokens_vector = get_gensim_vectors(tokens, model)  # returns list of vectors - per token
+    tokens_vector = get_gensim_vectors(tokens, we_model)  # returns list of vectors - per token
     doc_vector = document_avg_vector(tokens_vector)  # avg of all word-vectors in the document
-    doc_vector_labeled = numpy.append(doc_vector, 'UNK')  # dumb label for unseen document - label should not be used
-    # we want use 'doc_vector_labeled' for our actual classification
-    # try: return classify_text(doc_vector_labeled) (uncomment classify_text in classify_text.py)
-    return classify_text(text)
+    new_label = ml_model.predict([doc_vector])  # predict the label-class for unseen text data
+
+    return classify_text(new_label)
 
 
 if __name__ == '__main__':
     # object to clean text
     preprocess = PreprocessUtil.Preprocess()  # text pre-processing
-    model_folder = '/data/googlenews300d.bin'  # model location
+    file_io = FileOperations.FileUtil()  # classifier object
 
-    try:
-        model = get_google_model(model_folder)   # word embeddings model
-        model_size = model.vector_size  # size of the word embeddings model used
-        print('Success: Model loaded - Size: %d dimensions' % model_size)
-    except IOError:
-        print('Failure: Model not loaded. Check path and file')
+    we_model_folder = 'data/googlenews300d.bin'  # model location
+    ml_folder = 'data/logistic-model'  # machine learning classifier model
+
+    # word embeddings models
+    we_model = get_google_model(we_model_folder)  # word embeddings model
+    model_size = we_model.vector_size  # size of the word embeddings model used
+
+    # machine learning classifier
+    ml_model = get_classifier(ml_folder)
 
     #  WebApp  run
     app.run(debug=True, host='0.0.0.0')
