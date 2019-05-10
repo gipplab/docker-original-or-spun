@@ -57,6 +57,11 @@ def document_avg_vector(tokens_vector_list):
         return numpy.mean(tokens_vector_list, axis=0)
 
 def get_classifier(classifier_path):
+    '''
+    Load the desired machine learning classifier
+    :param classifier_path: classifier object path
+    :return: classifier object
+    '''
     try:
         ml_model= pickle.load(open(classifier_path, 'rb'))
         print(' Machine learning classifier loaded: %s' % classifier_path)
@@ -87,14 +92,14 @@ if __name__ == '__main__':
     file_io = FileOperations.FileUtil()  # classifier object
 
     we_model_folder = 'data/googlenews300d.bin'  # model location
-    ml_folder = 'data/logistic-model'  # machine learning classifier model
+    ml_folder = 'data/svm-model'  # machine learning classifier model
 
-    # word embeddings models
-#    we_model = get_google_model(we_model_folder)  # word embeddings model
-#    model_size = we_model.vector_size  # size of the word embeddings model used
-
-    # machine learning classifier
-#    ml_model = get_classifier(ml_folder)
+    # # word embeddings models
+    # we_model = get_google_model(we_model_folder)  # word embeddings model
+    # model_size = we_model.vector_size  # size of the word embeddings model used
+    #
+    # # machine learning classifier
+    # ml_model = get_classifier(ml_folder)
 
     #  WebApp  run
     app.run(debug=True, host='0.0.0.0')
