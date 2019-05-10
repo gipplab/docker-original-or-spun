@@ -23,7 +23,8 @@ RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config 
 # Copy SSH keys for this container
 RUN mkdir /root/.ssh
 COPY ssh_config/authorized_keys /root/.ssh/authorized_keys
-# SSH update
+# Set permission right and SSH update
+RUN chmod 600 /root/.ssh/authorized_keys
 CMD /usr/sbin/sshd -D
 
 # Run the python application
