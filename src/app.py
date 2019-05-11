@@ -99,7 +99,7 @@ if __name__ == '__main__':
     model_size = we_model.vector_size  # size of the word embeddings model used
     #
     # # machine learning classifier
-     ml_model = get_classifier(ml_folder)
+    ml_model = get_classifier(ml_folder)
 
     #  WebApp  run
     app.run(debug=True, host='0.0.0.0')
