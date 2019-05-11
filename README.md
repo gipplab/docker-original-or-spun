@@ -13,6 +13,20 @@
  setup. Please make your changes inside the `Dockerfile`.
 * **Persistent data** across a deployment step is only guaranteed inside the mounted
  directory `/data`.
+ 
+ 
+#### Docker and Test
+
+You can locally build and test the container if you have Docker installed. Testing beforehand
+ensures that your application is running when it is deployed.
+
+Build it
+
+    docker build -t test .
+    
+Run it
+
+    docker run test
 
 ### Access
 
