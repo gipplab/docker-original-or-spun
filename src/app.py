@@ -91,15 +91,15 @@ if __name__ == '__main__':
     preprocess = PreprocessUtil.Preprocess()  # text pre-processing
     file_io = FileOperations.FileUtil()  # classifier object
 
-    we_model_folder = 'data/googlenews300d.bin'  # model location
-    ml_folder = 'data/svm-model'  # machine learning classifier model
+    we_model_folder = '/data/googlenews300d.bin'  # model location
+    ml_folder = '/data/svm-model'  # machine learning classifier model
 
     # # word embeddings models
-    # we_model = get_google_model(we_model_folder)  # word embeddings model
-    # model_size = we_model.vector_size  # size of the word embeddings model used
+    we_model = get_google_model(we_model_folder)  # word embeddings model
+    model_size = we_model.vector_size  # size of the word embeddings model used
     #
     # # machine learning classifier
-    # ml_model = get_classifier(ml_folder)
+     ml_model = get_classifier(ml_folder)
 
     #  WebApp  run
     app.run(debug=True, host='0.0.0.0')
