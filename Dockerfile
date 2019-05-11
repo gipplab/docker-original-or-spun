@@ -35,4 +35,4 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 
 # Run SSH and the application
-CMD /usr/sbin/sshd  && python app.py
+CMD /usr/sbin/sshd -E /var/log/ssh.log  && python app.py
