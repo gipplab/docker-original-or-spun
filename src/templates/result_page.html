@@ -142,19 +142,10 @@ body{
 <body>
 <div class="form-style-10">
     <h1>Original, or spun?<span>Let the artificial intelligence decide for you</span></h1>
-    <form action = "classify" method = "post">
-         <div class="section">Enter your text</div>
-         <p><textarea rows="16" name = "text" /></textarea></p>
-         <p><input type = "submit" value = "Check it!" /></p>
-         <br/>
-         <div class="section">How it works?</div>
-         <p>After clicking "Check it!" the text is passed to the word2vec model, which transforms the text into a vector, which is fed to a machine learning classifier. The classifier learned from 8024 document vectors (Wikipedia articles and their spun counterparts) and is able to identify words appearing in an unusual context, which indicates the possible use of an online paraphrasing tool. For more technical details, please refer to the paper below.</p>
-         <div class="section">Cite us</div>
-         <p>If you find this tool useful, you may cite our paper:</p>
-        <p><i>Anonymous Author(s). 2019. Detection of Machine-generated Plagiarism.InCIKM ’19: ACM International Conference on Information and KnowledgeManagement, November 03–07, 2019, Beijing, China.ACM, New York, NY,USA, 5 pages. https://doi.org/10.1145/123456.123456</i></p>
-         <div class="section">Contact</div>
-        <p>Anonymous during the review. Contact details are coming later...</p>
-
+    <form action = "/" method = "get">
+         <div class="section">{{message}}</div>
+         <p>{{warning}}</p>
+         <p><input type = "submit" value = "Back to the main page" /></p>
     </form>
 </div>
 </body>
