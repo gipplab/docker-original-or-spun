@@ -88,7 +88,7 @@ def classify():
     else:
         text = 'Something went wrong, I do not know the origin of this text. Sorry.'
 
-    message='Please note that our classifier, just like any other automated approach, can be wrong. Please read the text carefully, watch out for oddities, and make our own decision about the text. '
+    message='Please note that our classifier, just like any other automated approach, can be wrong. Please read the text carefully, watch out for oddities, and make your own decision about the text. '
     warning = ''
     if short:
         warning = '''Please note that the accuracy of our classifier depends on the length of the text. The longer the text, the more accurate the classification will be.
