@@ -10,6 +10,15 @@ import pickle
 app = Flask(__name__)
 
 
+class VectorError(Exception):
+    """
+    Exception raised for errors during vector processing.
+    """
+
+    def __init__(self, message):
+        self.message = message
+
+
 def get_google_model(model_path):
     '''
     Load wordembeddings model in Binary in gensim format
@@ -41,6 +50,7 @@ def get_gensim_vectors(tokens, model):
             continue  # do nothing
     return list_vec
 
+
 def document_avg_vector(tokens_vector_list):
     '''
     Averages all word-vectors in a single document-vector representation
@@ -49,7 +59,7 @@ def document_avg_vector(tokens_vector_list):
     '''
     if len(tokens_vector_list) == 0:
         print('Document cannot be processed. No word embeddings found.')
-        exit(-1)  # exit with code -1 (error)
+        raise VectorError('Document cannot be processed. No word embeddings found.')
     else:
         return numpy.mean(tokens_vector_list, axis=0)
 
@@ -78,15 +88,18 @@ def classify():
     # Transforming document into doc_vector
     tokens = preprocess.clean(text)  # clean text - no stopwords, punctuations
     tokens_vector = get_gensim_vectors(tokens, we_model)  # returns list of vectors - per token
-    doc_vector = document_avg_vector(tokens_vector)  # avg of all word-vectors in the document
-    new_label = ml_model.predict([doc_vector])  # predict the label-class for unseen text data
+    try:
+      doc_vector = document_avg_vector(tokens_vector)  # avg of all word-vectors in the document
+      new_label = ml_model.predict([doc_vector])  # predict the label-class for unseen text data
 
-    if new_label == 'mg':
+      if new_label == 'mg':
         text = 'Spun: This text was likely paraphrased by a machine!'
-    elif new_label == 'og':
+      elif new_label == 'og':
         text = 'Original: This text was likely written by a human!'
-    else:
+      else:
         text = 'Something went wrong, I do not know the origin of this text. Sorry.'
+    except VectorError:
+      text = 'Sorry, we were unable to classify the text you entered.'
 
     message='Please note that our classifier, just like any other automated approach, can be wrong. Please read the text carefully, watch out for oddities, and make your own decision about the text. '
     warning = ''
